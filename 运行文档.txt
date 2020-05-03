@@ -1,0 +1,26 @@
+执行build_all.sh
+配置目录common/conf/, 基本可以不用修改
+启动redis
+hosts文件添加如下映射
+	127.0.0.1		fish.com
+	127.0.0.1		fish.blzz.shop
+解压client/fish.tar.gz
+nginx配置如下
+	server {
+        listen          80;
+        server_name     fish.com fish.blzz.shop;
+        charset         utf8;
+        index           index.html index.htm;
+        location /qq {
+            add_header          Access-Control-Allow-Origin *;
+            proxy_set_header    X-Target $request_uri;
+            proxy_set_header    X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_pass          http://127.0.0.1:9000;
+        }
+        location / {
+            root        D:/cy.worker/study/lang/go/fish/client/fish;
+            add_header  Access-Control-Allow-Origin *;
+            expires     7d;
+        }
+    }
+依次启动account.exe hall.exe game.exe
